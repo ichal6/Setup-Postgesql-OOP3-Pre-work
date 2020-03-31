@@ -29,7 +29,11 @@ public class Program {
         return props;
     }
 
-    public static void main(String[] args) {
+    public Program(){
+        run();
+    }
+
+    private void run() {
 
         Properties props = readProperties();
 
