@@ -1,8 +1,6 @@
 package com.Lechowicz.apps;
 
 import org.apache.ibatis.jdbc.ScriptRunner;
-import org.postgresql.copy.CopyManager;
-import org.postgresql.core.BaseConnection;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -10,7 +8,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.*;
-import java.util.Formatter;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -34,11 +31,11 @@ public class Program {
 
     public static void main(String[] args) {
 
-        //Properties props = readProperties();
+        Properties props = readProperties();
 
-        String url = "jdbc:postgresql://localhost:5432/test_db";
-        String user = "michael";
-        String password = "1234";
+        String url = props.getProperty("db.url");
+        String user = props.getProperty("db.user");
+        String password = props.getProperty("db.passwd");
 
         try {
 
@@ -56,16 +53,13 @@ public class Program {
             //Running above script
             sr.runScript(reader);
 
-        } catch (SQLException | IOException ex) {
+            con.close();
 
-            Logger lgr = Logger.getLogger(
-                    Program.class.getName());
-            lgr.log(Level.SEVERE, ex.getMessage(), ex);
-        }
+            con = DriverManager.getConnection(url, user, password);
 
-        try (Connection con = DriverManager.getConnection(url, user, password);
-             PreparedStatement pst = con.prepareStatement("SELECT * FROM dinos");
-             ResultSet rs = pst.executeQuery()) {
+            PreparedStatement pst = con.prepareStatement("SELECT * FROM dinos");
+
+            ResultSet rs = pst.executeQuery();
 
             while (rs.next()) {
 
@@ -76,10 +70,12 @@ public class Program {
                 System.out.println(rs.getInt(3));
             }
 
-        } catch (SQLException ex) {
+        } catch (SQLException | IOException ex) {
 
-            Logger lgr = Logger.getLogger(Program.class.getName());
+            Logger lgr = Logger.getLogger(
+                    Program.class.getName());
             lgr.log(Level.SEVERE, ex.getMessage(), ex);
         }
+
     }
 }
