@@ -2,6 +2,8 @@ package com.Lechowicz.apps;
 
 public class Main {
     public static void main(String[] args){
-        new Program();
+        Program newProg = new Program();
+
+        newProg.run();
     }
 }

@@ -14,7 +14,7 @@ import java.util.logging.Logger;
 
 public class Program {
 
-    public static Properties readProperties() {
+    private static Properties readProperties() {
 
         Properties props = new Properties();
         Path myPath = Paths.get("src/main/resources/database.properties");
@@ -29,11 +29,7 @@ public class Program {
         return props;
     }
 
-    public Program(){
-        run();
-    }
-
-    private void run() {
+    public void run() {
 
         Properties props = readProperties();
 
